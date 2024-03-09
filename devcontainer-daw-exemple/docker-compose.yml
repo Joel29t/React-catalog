@@ -1,0 +1,49 @@
+version: "3.6"
+services:
+  webserver:
+    container_name: php-apache-webserver
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: webserver
+    restart: 'no'
+    depends_on:
+      - db
+    volumes:
+      - ./apache-virtualhost.conf:/etc/apache2/sites-enabled/00-default.conf
+      - ./php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./src:/var/www/html
+    networks:
+      vpcbr:
+        ipv4_address: 192.168.50.10
+    ports:
+      - 9080:80
+  db:
+    container_name: db-mysql
+    image: mysql:latest
+    restart: 'no'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_DB}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d/
+    networks:
+      vpcbr:
+        ipv4_address: 192.168.50.20
+    ports:
+      - "9906:3306"
+volumes:
+  db-data:
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+       - subnet: 192.168.50.0/24
+         gateway: 192.168.50.1
+

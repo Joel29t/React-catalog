@@ -1,0 +1,32 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+  
+    h1 {
+      margin: 0;
+  
+      strong {
+        color: #66ccff;
+      }
+    }
+  
+    ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+  
+      li {
+        margin-right: 20px;
+        cursor: pointer;
+  
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  
